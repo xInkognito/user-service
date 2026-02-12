@@ -25,7 +25,6 @@ public class JwtService {
     private String jwtSecret;
 
     public String generateToken(Authentication authenticate) {
-
         if (authenticate.getPrincipal() instanceof User user) {
             Map<String, Object> claims = new HashMap<>();
             claims.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());

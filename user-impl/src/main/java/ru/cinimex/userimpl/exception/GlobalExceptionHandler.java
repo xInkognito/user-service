@@ -2,19 +2,36 @@ package ru.cinimex.userimpl.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<String> handleConflict(UserAlreadyExistsException ex) {
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            InvalidCodeException.class,
+            UserAlreadyActivatedException.class,
+            UserAlreadyActivatedException.class
+    })
+    public ResponseEntity<String> handleConflict(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleInternal(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Произошла ошибка: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Неверный логин или пароль");
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<String> handleAccountNotActivated(DisabledException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Аккаунт не активирован");
     }
 }

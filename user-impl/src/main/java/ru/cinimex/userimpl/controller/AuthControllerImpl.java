@@ -3,13 +3,11 @@ package ru.cinimex.userimpl.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cinimex.userapi.controller.AuthController;
 import ru.cinimex.userapi.dto.*;
-import ru.cinimex.userimpl.exception.UserAlreadyExistsException;
-import ru.cinimex.userimpl.service.JwtService;
+import ru.cinimex.userimpl.service.AuthService;
 import ru.cinimex.userimpl.service.RegistrationService;
 
 import java.util.UUID;
@@ -19,13 +17,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
     private final RegistrationService registrationService;
+    private final AuthService authService;
 
     @Override
     public ResponseEntity<TokenResponse> login(LoginRequest loginRequest) {
-        return null;
+        String accessToken = authService.loginUser(loginRequest);
+        return ResponseEntity.ok(new TokenResponse(accessToken));
     }
 
     @Override
