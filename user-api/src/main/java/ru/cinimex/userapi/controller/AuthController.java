@@ -6,15 +6,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.cinimex.userapi.dto.*;
 
 import java.util.UUID;
 
 @Tag(name = "Auth Controller", description = "Регистрация и аутентификация")
+@RequestMapping(path = "/")
 public interface AuthController {
 
     @Operation(summary = "Аутентификация и получение JWT")
@@ -24,7 +27,7 @@ public interface AuthController {
             @ApiResponse(responseCode = "403", description = "Неправильный логин или пароль"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
-    @PostMapping("/auth/login")
+    @PostMapping(value = "/auth/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest);
 
     @Operation(summary = "Регистрация нового пользователя")
@@ -33,7 +36,7 @@ public interface AuthController {
             @ApiResponse(responseCode = "400", description = "Пользователь уже существует"),
             @ApiResponse(responseCode = "500", description = "Ошибка сервера")
     })
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UUID> register(@RequestBody RegisterRequest registerRequest);
 
     @Operation(summary = "Подтверждение регистрации кодом")
@@ -42,7 +45,7 @@ public interface AuthController {
             @ApiResponse(responseCode = "400", description = "Неверный код, пользователь уже активен или не найден"),
             @ApiResponse(responseCode = "500", description = "Ошибка сервера")
     })
-    @PostMapping("/register/code")
+    @PostMapping(value = "/register/code", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Void> confirmCode(@RequestBody CodeConfirmationRequest codeConfirmationRequest);
 
     @Operation(summary = "Получение информации о текущем пользователе")
@@ -53,6 +56,6 @@ public interface AuthController {
             @ApiResponse(responseCode = "403", description = "Недостаточно прав"),
             @ApiResponse(responseCode = "500", description = "Ошибка сервера")
     })
-    @GetMapping("/users/current")
+    @GetMapping(value = "/users/current", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserInformationResponse> getCurrentUser();
 }
