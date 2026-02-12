@@ -13,6 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "temp_code")
 public class TempCodeEntity {
 
     @Id

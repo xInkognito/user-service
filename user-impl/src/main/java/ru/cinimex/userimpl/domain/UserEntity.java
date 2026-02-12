@@ -2,8 +2,6 @@ package ru.cinimex.userimpl.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -14,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Table(name = "\"user\"")
 public class UserEntity {
 
     @Id
