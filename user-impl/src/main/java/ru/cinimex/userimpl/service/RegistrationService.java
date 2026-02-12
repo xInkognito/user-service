@@ -32,12 +32,12 @@ public class RegistrationService {
         }
 
         UserEntity userEntity = userMapper.toEntity(request);
+        userEntity = userRepository.save(userEntity);
 
         // Генерация 6-значного кода
         String code = String.valueOf((int) ((Math.random() * 900000) + 100000));
 
         TempCodeEntity tempCode = TempCodeEntity.builder()
-                .id(UUID.randomUUID())
                 .user(userEntity)
                 .code(code)
                 .build();

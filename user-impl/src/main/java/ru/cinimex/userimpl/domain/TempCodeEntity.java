@@ -16,6 +16,7 @@ import java.util.UUID;
 public class TempCodeEntity {
 
     @Id
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
