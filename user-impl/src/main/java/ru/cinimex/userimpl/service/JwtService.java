@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,13 +35,14 @@ public class JwtService {
                     .subject(user.getUsername())
                     .issuedAt(new Date(System.currentTimeMillis()))
                     .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 3))
-                    .signWith(getSignKey(), Jwts.SIG.HS256).compact();
+                    .signWith(getSignKey()).compact();
         }
         throw new IllegalArgumentException("Incorrect type of authentication principal");
     }
 
     private SecretKey getSignKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUserName(String token) {
@@ -76,7 +78,7 @@ public class JwtService {
                 .subject("tech_user")
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(Date.from(expiredDate.toInstant()))
-                .signWith(getSignKey(), Jwts.SIG.HS256).compact();
+                .signWith(getSignKey()).compact();
     }
 
     public List<String> extractRole(String token) {
