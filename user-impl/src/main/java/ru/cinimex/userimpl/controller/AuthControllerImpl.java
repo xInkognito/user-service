@@ -3,6 +3,8 @@ package ru.cinimex.userimpl.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cinimex.userapi.controller.AuthController;
@@ -41,6 +43,16 @@ public class AuthControllerImpl implements AuthController {
     @Override
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<UserInformationResponse> getCurrentUser() {
-        return null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username;
+        if (principal instanceof UserDetails userDetails) {
+            username = userDetails.getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        UserInformationResponse response = authService.getCurrentUserInfo(username);
+        return ResponseEntity.ok(response);
     }
 }
