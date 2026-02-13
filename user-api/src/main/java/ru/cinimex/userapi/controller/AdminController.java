@@ -15,7 +15,6 @@ public interface AdminController {
     @GetMapping(value = "/users/{login}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserInformationResponse> getUserByLogin(@PathVariable String login);
 
-    // Здесь нет @RequestBody, данные идут в Query-параметрах, поэтому consumes не нужен
-    @PostMapping(value = "/tech/token", produces = MediaType.TEXT_PLAIN_VALUE)
-    ResponseEntity<String> generateTechToken(@RequestParam OffsetDateTime expirationDate);
+    @PostMapping(value = "/tech/token", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<TokenResponse> generateTechToken(@RequestParam OffsetDateTime expirationDate);
 }

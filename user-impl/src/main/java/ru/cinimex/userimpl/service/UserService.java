@@ -13,7 +13,7 @@ import ru.cinimex.userimpl.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class UserService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -29,7 +29,7 @@ public class AuthService {
         return jwtService.generateToken(authentication);
     }
 
-    public UserInformationResponse getCurrentUserInfo(String username) {
+    public UserInformationResponse getUserInfo(String username) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
 

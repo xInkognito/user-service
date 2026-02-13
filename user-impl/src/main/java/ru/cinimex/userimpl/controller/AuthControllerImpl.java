@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cinimex.userapi.controller.AuthController;
 import ru.cinimex.userapi.dto.*;
-import ru.cinimex.userimpl.service.AuthService;
+import ru.cinimex.userimpl.service.UserService;
 import ru.cinimex.userimpl.service.RegistrationService;
 
 import java.util.UUID;
@@ -20,11 +20,11 @@ import java.util.UUID;
 public class AuthControllerImpl implements AuthController {
 
     private final RegistrationService registrationService;
-    private final AuthService authService;
+    private final UserService userService;
 
     @Override
     public ResponseEntity<TokenResponse> login(LoginRequest loginRequest) {
-        String accessToken = authService.loginUser(loginRequest);
+        String accessToken = userService.loginUser(loginRequest);
         return ResponseEntity.ok(new TokenResponse(accessToken));
     }
 
@@ -52,7 +52,7 @@ public class AuthControllerImpl implements AuthController {
             username = principal.toString();
         }
 
-        UserInformationResponse response = authService.getCurrentUserInfo(username);
+        UserInformationResponse response = userService.getUserInfo(username);
         return ResponseEntity.ok(response);
     }
 }

@@ -1,5 +1,7 @@
 package ru.cinimex.userimpl.config;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import ru.cinimex.userimpl.filter.JwtFilter;
 
 @Configuration
@@ -26,6 +29,12 @@ import ru.cinimex.userimpl.filter.JwtFilter;
 @CrossOrigin
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    private final HandlerExceptionResolver resolver;
+
+    public SecurityConfig(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.resolver = resolver;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtFilter jwtFilter,
@@ -46,16 +55,13 @@ public class SecurityConfig {
 
                 // Настройка обработки ошибок
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(401);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"message\": \"Unauthorized: JWT token is missing or invalid\"}");
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(403);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"message\": \"Forbidden: You don't have enough permissions\"}");
-                        })
+                        // Ошибка 401 (нет токена или он плохой)
+                        .authenticationEntryPoint((request, response, authException) ->
+                                resolver.resolveException(request, response, null, authException))
+
+                        // Ошибка 403 (недостаточно прав)
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                resolver.resolveException(request, response, null, accessDeniedException))
                 )
 
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))

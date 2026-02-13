@@ -34,7 +34,7 @@ public class JwtService {
                     .claims(claims)
                     .subject(user.getUsername())
                     .issuedAt(new Date(System.currentTimeMillis()))
-                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 3))
+                    .expiration(new Date(System.currentTimeMillis() + 1000 * 30 * 1))
                     .signWith(getSignKey()).compact();
         }
         throw new IllegalArgumentException("Incorrect type of authentication principal");
@@ -72,7 +72,7 @@ public class JwtService {
 
     public String generateTechToken(OffsetDateTime expiredDate) {
         final Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", List.of("TECH"));
+        claims.put("roles", List.of("ROLE_TECH"));
         return Jwts.builder()
                 .claims(claims)
                 .subject("tech_user")

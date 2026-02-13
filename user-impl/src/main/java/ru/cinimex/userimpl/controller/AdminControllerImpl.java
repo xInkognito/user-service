@@ -6,23 +6,31 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cinimex.userapi.controller.AdminController;
+import ru.cinimex.userapi.dto.TokenResponse;
 import ru.cinimex.userapi.dto.UserInformationResponse;
+import ru.cinimex.userimpl.service.JwtService;
+import ru.cinimex.userimpl.service.UserService;
 
 import java.time.OffsetDateTime;
 
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminControllerImpl implements AdminController {
 
+    private final UserService userService;
+    private final JwtService jwtService;
+
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECH')")
     public ResponseEntity<UserInformationResponse> getUserByLogin(String login) {
-        return null;
+        UserInformationResponse response = userService.getUserInfo(login);
+        return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<String> generateTechToken(OffsetDateTime expirationDate) {
-        return null;
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<TokenResponse> generateTechToken(OffsetDateTime expirationDate) {
+        return ResponseEntity.ok(new TokenResponse(jwtService.generateTechToken(expirationDate)));
     }
 }
