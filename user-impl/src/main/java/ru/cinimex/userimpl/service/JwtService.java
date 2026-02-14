@@ -34,40 +34,10 @@ public class JwtService {
                     .claims(claims)
                     .subject(user.getUsername())
                     .issuedAt(new Date(System.currentTimeMillis()))
-                    .expiration(new Date(System.currentTimeMillis() + 1000 * 30 * 1))
+                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 3))
                     .signWith(getSignKey()).compact();
         }
         throw new IllegalArgumentException("Incorrect type of authentication principal");
-    }
-
-    private SecretKey getSignKey() {
-        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public String extractUserName(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
-    public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
     }
 
     public String generateTechToken(OffsetDateTime expiredDate) {
@@ -81,8 +51,34 @@ public class JwtService {
                 .signWith(getSignKey()).compact();
     }
 
+    public String extractUserName(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
     public List<String> extractRole(String token) {
         return extractClaim(token,
                 claims -> claims.get("roles", List.class));
+    }
+
+    private SecretKey getSignKey() {
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
