@@ -37,7 +37,7 @@ public interface AuthController {
             @ApiResponse(responseCode = "500", description = "Ошибка сервера")
     })
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<UUID> register(@RequestBody RegisterRequest registerRequest);
+    ResponseEntity<RegistrationResponse> register(@RequestBody RegisterRequest registerRequest);
 
     @Operation(summary = "Подтверждение регистрации кодом")
     @ApiResponses(value = {

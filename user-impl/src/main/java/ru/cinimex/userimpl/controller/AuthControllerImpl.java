@@ -29,9 +29,9 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public ResponseEntity<UUID> register(RegisterRequest registerRequest) {
+    public ResponseEntity<RegistrationResponse> register(RegisterRequest registerRequest) {
         UUID userId = registrationService.registerUser(registerRequest);
-        return ResponseEntity.ok(userId);
+        return ResponseEntity.ok(new RegistrationResponse(userId));
     }
 
     @Override
