@@ -23,7 +23,6 @@ class JwtServiceTest {
     @BeforeEach
     void setUp() {
         jwtService = new JwtService();
-        // Вручную устанавливаем значение приватного поля jwtSecret
         ReflectionTestUtils.setField(jwtService, "jwtSecret", SECRET);
     }
 
