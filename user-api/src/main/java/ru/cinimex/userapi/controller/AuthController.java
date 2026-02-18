@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.cinimex.userapi.dto.*;
 
-import java.util.UUID;
-
 @Tag(name = "Auth Controller", description = "Регистрация и аутентификация")
 @RequestMapping(path = "/")
 public interface AuthController {

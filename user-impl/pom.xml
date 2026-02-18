@@ -10,6 +10,7 @@
     </parent>
     <groupId>ru.cinimex</groupId>
     <artifactId>user-impl</artifactId>
+    <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>user-impl</name>
     <description>user-impl</description>
