@@ -22,6 +22,6 @@ public class KafkaProducerService {
                 .body("Ваш код подтверждения - " + code)
                 .build();
 
-        kafkaTemplate.send(topic, message);
+        kafkaTemplate.send(topic, email, message);
     }
 }
