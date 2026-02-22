@@ -25,3 +25,7 @@ jwt:
 springdoc:
   show-login-endpoint: true
   show-pre-authorize: true
+
+app:
+  kafka:
+    topic: "notification.message.in"

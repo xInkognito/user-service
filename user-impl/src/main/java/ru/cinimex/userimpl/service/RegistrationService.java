@@ -1,12 +1,14 @@
 package ru.cinimex.userimpl.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.cinimex.userapi.dto.CodeConfirmationRequest;
 import ru.cinimex.userapi.dto.RegisterRequest;
 import ru.cinimex.userimpl.domain.TempCodeEntity;
 import ru.cinimex.userimpl.domain.UserEntity;
+import ru.cinimex.userimpl.event.UserRegisteredEvent;
 import ru.cinimex.userimpl.exception.InvalidCodeException;
 import ru.cinimex.userimpl.exception.UserAlreadyExistsException;
 import ru.cinimex.userimpl.exception.UserNotFoundException;
@@ -24,6 +26,7 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final TempCodeRepository tempCodeRepository;
     private final UserMapper userMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public UUID registerUser(RegisterRequest request) {
@@ -44,7 +47,7 @@ public class RegistrationService {
 
         tempCodeRepository.save(tempCode);
 
-        // TODO: Отправка в Kafka
+        eventPublisher.publishEvent(new UserRegisteredEvent(userEntity.getEmail(), code));
 
         return userEntity.getId();
     }

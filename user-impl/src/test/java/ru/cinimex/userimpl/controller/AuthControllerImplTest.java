@@ -26,6 +26,7 @@ import ru.cinimex.userimpl.exception.UserAlreadyExistsException;
 import ru.cinimex.userimpl.exception.UserNotFoundException;
 import ru.cinimex.userimpl.repository.UserRepository;
 import ru.cinimex.userimpl.service.JwtService;
+import ru.cinimex.userimpl.service.KafkaProducerService;
 import ru.cinimex.userimpl.service.RegistrationService;
 import ru.cinimex.userimpl.service.UserService;
 
@@ -46,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         HibernateJpaAutoConfiguration.class
 })
 class AuthControllerImplTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -63,6 +65,9 @@ class AuthControllerImplTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private KafkaProducerService kafkaProducerService;
 
     @Nested
     @DisplayName("POST /auth/login")
