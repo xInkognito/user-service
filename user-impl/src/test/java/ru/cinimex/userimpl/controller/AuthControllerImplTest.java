@@ -21,6 +21,7 @@ import ru.cinimex.userapi.dto.CodeConfirmationRequest;
 import ru.cinimex.userapi.dto.LoginRequest;
 import ru.cinimex.userapi.dto.RegisterRequest;
 import ru.cinimex.userapi.dto.UserInformationResponse;
+import ru.cinimex.userimpl.config.KafkaConfig;
 import ru.cinimex.userimpl.exception.UserAlreadyActivatedException;
 import ru.cinimex.userimpl.exception.UserAlreadyExistsException;
 import ru.cinimex.userimpl.exception.UserNotFoundException;
@@ -68,6 +69,9 @@ class AuthControllerImplTest {
 
     @MockitoBean
     private KafkaProducerService kafkaProducerService;
+
+    @MockitoBean
+    private KafkaConfig kafkaConfig;
 
     @Nested
     @DisplayName("POST /auth/login")

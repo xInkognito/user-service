@@ -14,6 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.cinimex.userapi.dto.UserInformationResponse;
+import ru.cinimex.userimpl.config.KafkaConfig;
 import ru.cinimex.userimpl.exception.UserNotFoundException;
 import ru.cinimex.userimpl.filter.JwtFilter;
 import ru.cinimex.userimpl.listener.UserRegistrationListener;
@@ -58,6 +59,9 @@ class AdminControllerImplTest {
 
     @MockitoBean
     private KafkaProducerService kafkaProducerService;
+
+    @MockitoBean
+    private KafkaConfig kafkaConfig;
 
     @Nested
     @DisplayName("GET /admin/users/{login}")
