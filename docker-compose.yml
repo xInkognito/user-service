@@ -8,17 +8,8 @@ services:
       DB_URL: "${DB_URL}"
       DB_USER: "${DB_USER}"
       DB_PASSWORD: "${DB_PASSWORD}"
-      AUTH_SCHEMA: "${AUTH_SCHEMA}"
-    command: >
-      bash -c "liquibase --url=${DB_URL} 
-      --username=${DB_USER} --password=${DB_PASSWORD} 
-      --changelog-file=db/database-changelog.xml 
-      execute-sql --sql='CREATE SCHEMA IF NOT EXISTS ${AUTH_SCHEMA};' && 
-      liquibase --url=${DB_URL} 
-      --username=${DB_USER} --password=${DB_PASSWORD} 
-      --changelog-file=db/database-changelog.xml 
-      --default-schema-name=${AUTH_SCHEMA} 
-      update"
+      DB_SCHEMA: "${DB_SCHEMA}"
+      SKIP_MIGRATION: "false"
 
   user-app:
     build: ./user-impl
@@ -28,10 +19,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      SPRING_DATASOURCE_URL: "${DB_URL}?currentSchema=${AUTH_SCHEMA}"
+      SPRING_DATASOURCE_URL: "${DB_URL}?currentSchema=${DB_SCHEMA}"
       SPRING_DATASOURCE_USERNAME: "${DB_USER}"
       SPRING_DATASOURCE_PASSWORD: "${DB_PASSWORD}"
-      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: "${AUTH_SCHEMA}"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: "${DB_SCHEMA}"
       SPRING_KAFKA_BOOTSTRAP_SERVERS: "${KAFKA_SERVERS}"
       SPRING_LIQUIBASE_ENABLED: "false"
       JWT_SECRET: "${JWT_SECRET}"
